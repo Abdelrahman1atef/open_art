@@ -1,0 +1,39 @@
+name: open_art
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  vector_graphics: any
+  flutter_svg:
+  flutter_screenutil:
+  dio:
+  pretty_dio_logger:
+  pin_code_fields:
+  dotted_border:
+  permission_handler:
+  image_picker:
+  flutter_bloc:
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  device_preview:
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+  fonts:
+    - family: Epilogue
+      fonts:
+        - asset: assets/fonts/Epilogue.ttf
