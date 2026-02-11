@@ -11,19 +11,19 @@ class AppImage extends StatelessWidget {
     this.height,
     this.width,
     this.svgColorFilter
-    , this.errorBuilder,
+    , this.errorBuilder, this.onTap,
   });
 
   final String image;
   final BoxFit? fit;
-
+  final VoidCallback? onTap;
   final double? height;
 
   final double? width;
   final ColorFilter? svgColorFilter;
   final ImageErrorWidgetBuilder? errorBuilder;
 
-  Widget showImage(context,String image) {
+  Widget showImage(BuildContext context,String image) {
     if (image.toLowerCase().startsWith("http") ||
         image.toLowerCase().startsWith("https")) {
       return Image.network(image, fit: fit, height: height, width: width);
@@ -73,6 +73,12 @@ class AppImage extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return showImage(context,image);
+    return InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(500),
+        child: Padding(
+          padding: onTap==null?EdgeInsetsGeometry.all(0) :const EdgeInsets.all(8.0),
+          child: showImage(context,image),
+        ));
   }
 }

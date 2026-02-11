@@ -35,6 +35,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           backgroundColor:  Colors.transparent,
           elevation: 0,
           scrolledUnderElevation: 0,
+          automaticallyImplyLeading: false,
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
