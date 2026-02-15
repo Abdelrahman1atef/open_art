@@ -124,6 +124,9 @@ class AppTheme {
       surfaceContainer: AppGrayscale.titleActive,
       surfaceBright: AppGrayscale.offWhite,
       outline: AppGrayscale.line,
+      inverseSurface: AppGrayscale.offWhite,
+      onInverseSurface: AppGrayscale.placeholder,
+      onPrimaryFixed: AppGrayscale.label,
     ),
     inputDecorationTheme: const InputDecorationTheme(
       filled: true,
@@ -170,6 +173,9 @@ class AppTheme {
       surfaceContainer: AppGrayscale.body,
       surfaceBright: AppGrayscale.body,
       outline: AppGrayscale.background,
+      inverseSurface: AppGrayscale.label,
+      onInverseSurface: AppGrayscale.background,
+      onPrimaryFixed: AppGrayscale.background,
     ),
     searchBarTheme: SearchBarThemeData(
       elevation: WidgetStatePropertyAll(0),

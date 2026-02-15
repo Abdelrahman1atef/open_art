@@ -153,7 +153,8 @@ class _AppButtonState extends State<AppButton> {
         return _buildText(context, "Loading...", useWhiteText);
       }
       return CircularProgressIndicator(
-        color: widget.useWhiteText? Colors.white:color.onTertiary ,
+        color: widget.useWhiteText? Colors.white:color.onTertiary,
+        constraints: BoxConstraints(minWidth: 32,minHeight: 32),
       );
     }
     return _buildText(context, widget.text, useWhiteText);

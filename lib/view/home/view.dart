@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_art/core/logic/helper_methods.dart';
@@ -13,8 +15,62 @@ part 'widgets/card.dart';
 
 part 'widgets/hotBid.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final ScrollController _hotBidController = ScrollController();
+  Timer? _timer;
+
+
+  void _startScrolling([bool onTap =false]) {
+    if (onTap) {
+
+      _hotBidController.animateTo(_hotBidController.offset + 100, duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+    }
+    else {
+      _timer = Timer.periodic(const Duration(milliseconds: 10), (_) {
+        final newOffset = _hotBidController.offset + 10;
+
+        if (_hotBidController.hasClients &&
+            newOffset <= _hotBidController.position.maxScrollExtent) {
+          _hotBidController.jumpTo(newOffset);
+        }
+      });
+    }
+  }
+
+  void _startReverseScrolling([bool onTap =false]) {
+    if (onTap) {
+      var currentOffset = _hotBidController.offset;
+      _hotBidController.animateTo(currentOffset - 100, duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+    }else{
+
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (_) {
+      final newOffset = _hotBidController.offset - 10;
+
+      if (_hotBidController.hasClients &&
+          newOffset >= _hotBidController.position.minScrollExtent) {
+        _hotBidController.jumpTo(newOffset);
+      }
+    });
+    }
+  }
+
+  void _stopScrolling() {
+    _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _hotBidController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +81,9 @@ class HomeView extends StatelessWidget {
       children: [
         BlocBuilder<ThemeCubit, ThemeMode>(
           builder: (context, themeMode) {
-            final brightness = MediaQuery.of(context).platformBrightness;
+            final brightness = MediaQuery
+                .of(context)
+                .platformBrightness;
             final isDark =
                 themeMode == ThemeMode.dark || (themeMode == ThemeMode.system && brightness == Brightness.dark);
             return isDark ? SizedBox.shrink() : AppImage(image: "home_background.png");
@@ -47,16 +105,18 @@ class HomeView extends StatelessWidget {
             ),
             SizedBox(height: 40),
             AppCard(
-              onTap: () => goto(
-                BodyView(
-                  child: DetailsView(
-                    image:
+              onTap: () =>
+                  goto(
+                    BodyView(
+                      child: DetailsView(
+                        image:
                         "https://avatars.mds.yandex.net/i?id=e945ae820ed74d9b3734e8929cc230d5fa732141-13533894-images-thumbs&n=13",
+                      detailsState: DetailsState.currentBid,
+                      ),
+                    ),
                   ),
-                ),
-              ),
               image:
-                  "https://avatars.mds.yandex.net/i?id=e945ae820ed74d9b3734e8929cc230d5fa732141-13533894-images-thumbs&n=13",
+              "https://avatars.mds.yandex.net/i?id=e945ae820ed74d9b3734e8929cc230d5fa732141-13533894-images-thumbs&n=13",
             ),
             SizedBox(height: 12),
             Row(
@@ -122,8 +182,32 @@ class HomeView extends StatelessWidget {
                   Row(
                     spacing: 30,
                     children: [
-                      AppImage(image: "Back Arrow.svg", onTap: () {}),
-                      AppImage(image: "Forward Arrow.svg", onTap: () {}),
+                      InkWell(
+                        onTap: () =>_startReverseScrolling(true),
+                        onTapDown: (_) => _startReverseScrolling(),
+                        onTapUp: (_) => _stopScrolling(),
+                        onTapCancel: _stopScrolling,
+                        borderRadius: BorderRadius.circular(500),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AppImage(
+                            image: "Back Arrow.svg",
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () =>_startScrolling(true),
+                        onTapDown: (_) => _startScrolling(),
+                        onTapUp: (_) => _stopScrolling(),
+                        onTapCancel: _stopScrolling,
+                        borderRadius: BorderRadius.circular(500),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: AppImage(
+                            image: "Forward Arrow.svg",
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -133,6 +217,7 @@ class HomeView extends StatelessWidget {
             SizedBox(
               height: 370,
               child: ListView.builder(
+                controller: _hotBidController,
                 scrollDirection: Axis.horizontal,
                 itemCount: hotBidList.length,
                 itemBuilder: (context, index) => HotBidCard(image: hotBidList[index]),
@@ -196,7 +281,7 @@ class HomeView extends StatelessWidget {
                                   borderRadius: BorderRadiusGeometry.circular(100),
                                   child: AppImage(
                                     image:
-                                        "https://is1-ssl.mzstatic.com/image/thumb/Music/8a/4c/4b/mzi.yejmzoeq.jpg/800x800cc.jpg",
+                                    "https://is1-ssl.mzstatic.com/image/thumb/Music/8a/4c/4b/mzi.yejmzoeq.jpg/800x800cc.jpg",
                                     width: 40,
                                   ),
                                 ),
@@ -310,7 +395,7 @@ final hotCollectionList = [
     borderRadius: BorderRadiusGeometry.circular(16),
     child: AppImage(
       image:
-          "https://cdn-image.zvuk.com/pic?hash=b2893058-9c85-414f-a22b-bdff4a59097c&id=45072239&size=large&type=release",
+      "https://cdn-image.zvuk.com/pic?hash=b2893058-9c85-414f-a22b-bdff4a59097c&id=45072239&size=large&type=release",
       width: 165,
       height: 200,
       fit: BoxFit.cover,

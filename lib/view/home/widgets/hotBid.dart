@@ -10,11 +10,11 @@ class HotBidCard extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     final color = theme.colorScheme;
-    return Padding(
-      padding: const EdgeInsetsDirectional.only(end: 12, start: 16),
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(32),
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(32),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.only(end: 12, start: 12,top: 5),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
